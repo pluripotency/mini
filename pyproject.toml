@@ -12,3 +12,8 @@ dependencies = ['toml']
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
+
+[dependency-groups]
+lint = [
+    "pylint>=1.9.5",
+]
