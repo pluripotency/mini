@@ -1,0 +1,14 @@
+[project]
+name = "mini"
+version = "0.1.0"
+description = "mini library for cli apps"
+readme = "README.md"
+authors = [
+    { name = "Masayoshi Kokuryo", email = "masakoku@gmail.com" }
+]
+requires-python = ">=3"
+dependencies = []
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
