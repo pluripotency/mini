@@ -139,8 +139,18 @@ def prepare_dir(dir_path, clear=False):
                 os.makedirs(dir_path)
     return try_io_func(func, f'prepare_dir: path {dir_path}')
 
+def prepare_dir_if_not_exists(dir_path, clear=False):
+    def func():
+        if os.path.isdir(dir_path):
+            if clear:
+                delete_all_in_dir(dir_path)
+        else:
+            os.makedirs(dir_path)
+        return True
+    return try_io_func(func, f'prepare_dir: path {dir_path}')
+
 def prepare_clean_dir(dir_path):
-    prepare_dir(dir_path, clear=True)
+    prepare_dir_if_not_exists(dir_path, clear=True)
 
 def open_read(file_path):
     def func():
@@ -167,6 +177,11 @@ def read_json(file_path):
         data = open_read(file_path)
         return json.loads(data)
     return try_io_func(func, f'read_json: path: {file_path}')
+
+def write_toml(file_path, contents):
+    def func():
+        return open_write(file_path, toml.dumps(contents))
+    return try_io_func(func, f'write_toml: path: {file_path}')
 
 def write_json(file_path, json_contents, indent=2):
     def func():
@@ -431,6 +446,23 @@ def concat_dict(args):
     if len(args) == 1:
         return x
     return dict(x, **concat_dict(args[1:]))
+
+def hex_mac_kvm():
+    import random
+    return [0x52, 0x54, 0x00,
+            random.randint(0x00, 0xff),
+            random.randint(0x00, 0xff),
+            random.randint(0x00, 0xff)]
+
+def MACprettyprint(mac):
+    """
+    >>> MACprettyprint([0x52, 0x54, 0x00, 0x00, 0x00, 0x00])
+    '52:54:00:00:00:00'
+    """
+    return ':'.join(map(mac, lambda x: "%02x" % x))
+
+def random_mac():
+    return MACprettyprint(hex_mac_kvm())
 
 def write_file_list(file_list):
     for item in file_list:
