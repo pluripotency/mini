@@ -7,7 +7,7 @@ authors = [
     { name = "Masayoshi Kokuryo", email = "masakoku@gmail.com" }
 ]
 requires-python = ">=3"
-dependencies = []
+dependencies = ['toml']
 
 [build-system]
 requires = ["hatchling"]
