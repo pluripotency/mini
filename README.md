@@ -1,2 +1,2 @@
-# mini.py
-mini library for cli apps
+# mini
+mini library for python cli apps

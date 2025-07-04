@@ -18,10 +18,10 @@ def get_input(expression=r'\w+', message='Please input: ', err_message='invalid 
 
 def get_ipv4(default_value=None, with_prefix=False):
     message = 'Please input ipv4'
-    exp = misc.ipv4_exp_str
+    exp = misc.IPV4_EXP_STR
     if with_prefix:
         message += '/prefix'
-        exp = misc.ipv4_with_prefix_exp_str
+        exp = misc.IPV4_WITH_PREFIX_EXP_STR
     if default_value:
         message += f'(default:{default_value})'
     return get_input(exp, message + ': ', default_value=default_value)
