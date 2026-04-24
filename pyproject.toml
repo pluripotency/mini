@@ -12,7 +12,3 @@ authors = [
 ]
 requires-python = ">=3"
 dependencies = ['toml']
-[project.optional-dependencies]
-lint = [
-    "pylint",
-]

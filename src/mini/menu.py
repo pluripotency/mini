@@ -3,8 +3,8 @@ import sys
 import re
 from termios import tcflush, TCIFLUSH
 import toml
-from .ansi_colors import red, green, brown, blue, purple, cyan, white, light_red, light_green, yellow, light_blue, pink, light_cyan
-from . import misc
+from mini.ansi_colors import red, green, cyan, white, yellow
+from mini import misc
 
 def get_input(expression=r'\w+', message='Please input: ', err_message='invalid value.', default_value=None):
     while True:
@@ -40,25 +40,25 @@ def get_y_n(message, default=False, color=yellow):
     else:
         return default
 
-def getlist(li, color=cyan):
+def getlist(menu_list, color=cyan):
     item_list = []
-    for i, l in enumerate(li):
+    for i, line in enumerate(menu_list):
         index = i+1
         if index < 10:
             head = ' '+str(index)+', '
         else:
             head = str(index)+', '
-        pad = 10 - len(l)
-        l += ' ' * pad
-        item_list += [head + color(l)]
+        pad = 10 - len(line)
+        line += ' ' * pad
+        item_list += [head + color(line)]
         if index % 5 == 0:
             print(' '.join(item_list))
             item_list = []
     print(' '.join(item_list))
 
-def getvlist(li, color=cyan):
-    for i, l in enumerate(li):
-        print(str(i + 1) + ', ' + color(l))
+def getvlist(menu_list, color=cyan):
+    for i, line in enumerate(menu_list):
+        print(str(i + 1) + ', ' + color(line))
 
 def choose_num(menu_list, message=green('Please select number.'), vertical=True, append_exit=False, append_back=False, color=cyan):
     while True:
@@ -124,7 +124,7 @@ def get_obj_by_definition(input_definition, default_values, by_toml=False, color
     ex) default_values: ex_default_user
     """
     if by_toml:
-        input_definiion = toml.loads(input_definiion)
+        input_definition = toml.loads(input_definition)
         default_values = toml.loads(default_values)
     obj = {}
     for k, v in input_definition.items():

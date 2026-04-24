@@ -10,6 +10,35 @@ import toml
 from mini import ansi_colors
 pp = pprint.PrettyPrinter()
 
+class FakeWriter:
+    def __init__(self):
+        pass
+    def write(self, message):
+        pass
+    def flush(self):
+        pass
+    def close(self):
+        pass
+
+class ForkWriter:
+    def __init__(self, file_path=None, write_mode='a'):
+        self.file_path = file_path
+        if file_path:
+            create_dir_if_not_exist(file_path)
+            self.file = open(os.path.expanduser(file_path), write_mode)
+        else:
+            self.file = FakeWriter()
+
+    def write(self, s):
+        self.file.write(s)
+
+    def flush(self):
+        self.file.flush()
+
+    def close(self):
+        self.file.flush()
+        self.file.close()
+
 def print_flush(msg):
     print(msg, flush=True)
 
@@ -18,9 +47,6 @@ def prettyprint(data):
 
 def sanitize_to_file_name(command):
     return re.sub(r'\s|\.', '_', re.sub('/|:|', '', command))
-
-def is_file(file_path):
-    return os.path.isfile(file_path)
 
 def now():
     return datetime.datetime.now()
@@ -57,15 +83,21 @@ def get_hms_f(dt):
 def create_timestamp_str():
     return now().strftime('%Y%m%d_%H%M%S')
 
-def del_indent_lines(string):
-    sp = string.split('\n')
+def del_indent_lines(multiline_str: str):
+    sp = multiline_str.split('\n')
     last_line = sp[len(sp)-1]
     indent_group= re.search(r'^(\s+)', last_line)
-    indent = len(indent_group[0])
+    indent = len(indent_group[0]) if indent_group else 0
     return [line[indent:] for line in sp[1:len(sp)-1]]
 
 def del_indent(string):
     return '\n'.join(del_indent_lines(string))
+
+def is_file(may_file_path):
+    return os.path.isfile(may_file_path)
+
+def is_dir(may_dir_path):
+    return os.path.isdir(may_dir_path)
 
 def try_io_func(func, f_name):
     try:
@@ -76,35 +108,6 @@ def try_io_func(func, f_name):
     except Exception as e:
         print_flush(ansi_colors.red(f'Exception in {f_name}: {e}'))
         return False
-
-class FakeWriter:
-    def __init__(self):
-        pass
-    def write(self, message):
-        pass
-    def flush(self):
-        pass
-    def close(self):
-        pass
-
-class ForkWriter:
-    def __init__(self, file_path=None, write_mode='a'):
-        self.file_path = file_path
-        if file_path:
-            create_dir_if_not_exist(file_path)
-            self.file = open(os.path.expanduser(file_path), write_mode)
-        else:
-            self.file = FakeWriter()
-
-    def write(self, s):
-        self.file.write(s)
-
-    def flush(self):
-        self.file.flush()
-
-    def close(self):
-        self.file.flush()
-        self.file.close()
 
 def create_dir_if_not_exist(file_path):
     os.makedirs(os.path.dirname(os.path.expanduser(file_path)), exist_ok=True)
