@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "mini"
-version = "0.2"
+version = "0.2.1"
 description = "mini library for python cli apps"
 readme = "README.md"
 authors = [

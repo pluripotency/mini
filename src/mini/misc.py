@@ -45,11 +45,23 @@ def print_flush(msg):
 def prettyprint(data):
     pp.pprint(data)
 
+def load_json(json_str):
+    return json.loads(json_str)
+
+def dump_json(obj, indent=2):
+    return json.dumps(obj, indent=indent)
+
 def print_json(json_obj):
     print_flush(json.dumps(json_obj, indent=2))
 
+def load_toml(toml_str):
+    return toml.loads(toml_str)
+
+def dump_toml(obj):
+    return toml.dumps(obj)
+
 def print_toml(toml_obj):
-    print_flush(toml.dumps(toml_obj))
+    print_flush(dump_toml(toml_obj))
 
 def sanitize_to_file_name(command):
     return re.sub(r'\s|\.', '_', re.sub('/|:|', '', command))
@@ -189,7 +201,7 @@ def read_json(file_path):
 
 def write_toml(file_path, contents):
     def func():
-        return open_write(file_path, toml.dumps(contents))
+        return open_write(file_path, dump_toml(contents))
     return try_io_func(func, f'write_toml: path: {file_path}')
 
 def write_json(file_path, json_contents, indent=2):
