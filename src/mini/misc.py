@@ -45,6 +45,12 @@ def print_flush(msg):
 def prettyprint(data):
     pp.pprint(data)
 
+def print_json(json_obj):
+    print_flush(json.dumps(json_obj, indent=2))
+
+def print_toml(toml_obj):
+    print_flush(toml.dumps(toml_obj))
+
 def sanitize_to_file_name(command):
     return re.sub(r'\s|\.', '_', re.sub('/|:|', '', command))
 
