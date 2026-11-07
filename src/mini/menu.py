@@ -2,7 +2,6 @@ import json
 import sys
 import re
 from termios import tcflush, TCIFLUSH
-import toml
 from mini.ansi_colors import red, green, cyan, white, yellow
 from mini import misc
 
@@ -124,8 +123,8 @@ def get_obj_by_definition(input_definition, default_values, by_toml=False, color
     ex) default_values: ex_default_user
     """
     if by_toml:
-        input_definition = toml.loads(input_definition)
-        default_values = toml.loads(default_values)
+        input_definition = misc.load_toml(input_definition)
+        default_values = misc.load_toml(default_values)
     obj = {}
     for k, v in input_definition.items():
         if 'type' in v:
@@ -165,7 +164,7 @@ def get_obj_by_definition(input_definition, default_values, by_toml=False, color
                     obj[k] = get_y_n(f'{message}(default={default_value}):', default=default_value)
                 else:
                     obj[k] = get_y_n(f'{message}:')
-    print(color(toml.dumps(obj)))
+    print(color(misc.dump_toml(obj)))
     if get_y_n('OK?'):
         return obj
     else:
