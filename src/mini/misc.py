@@ -207,8 +207,8 @@ def open_write(file_path, contents, write_mode='w'):
 
 def read_toml(file_path):
     def func():
-        with open(file_path, 'r') as f:
-            translated = toml.load(f)
+        with open(file_path, 'rb') as f:
+            translated = tomllib.load(f)
         return translated
     return try_io_func(func, f'read_toml: path: {file_path}')
 
