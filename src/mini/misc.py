@@ -6,9 +6,28 @@ import shutil
 import json
 import datetime
 import pprint
-import toml
+import tomllib
+import tomli_w
+from pathlib import Path
 from mini import ansi_colors
 pp = pprint.PrettyPrinter()
+
+def resolve_project_path(path_from_project) -> dict:
+    """
+    現在のディレクトリ（またはスクリプトの場所）から親ディレクトリを遡り、
+    config/test.toml が存在するプロジェクトルートを見つけて読み込む
+    """
+    # 1. 実行時のカレントディレクトリ（または __file__ の親）を起点にする
+    # ※スクリプト自体の場所を起点にしたい場合は Path(__file__).resolve().parent に変更してください
+    current_dir = Path.cwd()
+
+    # 2. ルートディレクトリに到達するまで親ディレクトリを順番に確認する
+    for parent in [current_dir, *current_dir.parents]:
+        target_path = parent / path_from_project
+        if target_path.exists():
+            return target_path
+
+    raise FileNotFoundError(f"プロジェクトルートに {path_from_project} が見つかりませんでした。")
 
 class FakeWriter:
     def __init__(self):
@@ -55,10 +74,10 @@ def print_json(json_obj):
     print_flush(json.dumps(json_obj, indent=2))
 
 def load_toml(toml_str):
-    return toml.loads(toml_str)
+    return tomllib.loads(toml_str)
 
 def dump_toml(obj):
-    return toml.dumps(obj)
+    return tomli_w.dumps(obj)
 
 def print_toml(toml_obj):
     print_flush(dump_toml(toml_obj))
